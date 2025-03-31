@@ -1,0 +1,91 @@
+@page "/servizi"
+@using MedicoPrenotazioni.Models
+@using MedicoPrenotazioni.Services
+@inject IServizioService ServizioService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<h3>Gestione Servizi</h3>
+
+<div class="row mb-3">
+    <div class="col">
+        <a href="/servizi/create" class="btn btn-primary">
+            <i class="oi oi-plus"></i> Nuovo Servizio
+        </a>
+    </div>
+</div>
+
+@if (servizi == null)
+{
+    <p><em>Caricamento in corso...</em></p>
+}
+else if (!servizi.Any())
+{
+    <div class="alert alert-info">
+        Non ci sono servizi registrati nel sistema.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Descrizione</th>
+                    <th>Prezzo (€)</th>
+                    <th>Durata (min)</th>
+                    <th>Stato</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var servizio in servizi)
+                {
+                    <tr>
+                        <td>@servizio.Nome</td>
+                        <td>@(servizio.Descrizione?.Length > 50 ? servizio.Descrizione.Substring(0, 47) + "..." : servizio.Descrizione)</td>
+                        <td>@servizio.Prezzo.ToString("C")</td>
+                        <td>@servizio.DurataDefaultMinuti</td>
+                        <td>
+                            @if (servizio.Attivo)
+                            {
+                                <span class="badge bg-success">Attivo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Inattivo</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="/servizi/edit/@servizio.Id" class="btn btn-sm btn-primary">
+                                <i class="oi oi-pencil"></i> Modifica
+                            </a>
+                            <button class="btn btn-sm btn-danger" @onclick="() => DeleteServizio(servizio.Id)">
+                                <i class="oi oi-trash"></i> Elimina
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    private List<Servizio>? servizi;
+
+    protected override async Task OnInitializedAsync()
+    {
+        servizi = await ServizioService.GetServiziAsync();
+    }
+
+    private async Task DeleteServizio(int id)
+    {
+        if (await JSRuntime.InvokeAsync<bool>("confirm", $"Sei sicuro di voler eliminare questo servizio?"))
+        {
+            await ServizioService.DeleteServizioAsync(id);
+            servizi = await ServizioService.GetServiziAsync();
+        }
+    }
+}

@@ -1,0 +1,163 @@
+﻿@page "/NonDisponibilita"
+@using MedicoPrenotazioni.Models
+@using MedicoPrenotazioni.Services
+@inject ISlotDisponibilitaService SlotDisponibilitaService
+@inject IOperatoreService OperatoreService
+@inject IServizioService ServizioService
+@inject INonDisponibileService NonDisponibileService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<h3>Gestione Slot di Disponibilità</h3>
+
+<div class="row mb-3">
+    <div class="col">
+        <a href="/NonDisponibile/create" class="btn btn-primary">
+            <i class="oi oi-plus"></i> Nuovo Slot di NonDisponibile
+        </a>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="filtroOperatore">Filtra per Operatore</label>
+            <select id="filtroOperatore" class="form-control" @onchange="FiltroOperatoreChanged">
+                <option value="0">Tutti gli operatori</option>
+                @if (operatori != null)
+                {
+                    @foreach (var operatore in operatori)
+                    {
+                        <option value="@operatore.Id">@operatore.NomeCompleto</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="filtroServizio">Filtra per Servizio</label>
+            <select id="filtroServizio" class="form-control" @onchange="FiltroServizioChanged">
+                <option value="0">Tutti i servizi</option>
+                @if (servizi != null)
+                {
+                    @foreach (var servizio in servizi)
+                    {
+                        <option value="@servizio.Id">@servizio.Nome</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+</div>
+
+@if (slots == null)
+{
+    <p><em>Caricamento in corso...</em></p>
+}
+else if (!slots.Any())
+{
+    <div class="alert alert-info">
+        Non ci sono slot di disponibilità registrati nel sistema.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Operatore</th>
+                    <th>Servizio</th>
+                    <th>Giorno</th>
+                    <th>Orario</th>
+                    <th>Durata (min)</th>
+                    <th>Stato</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var slot in slotsFiltrati)
+                {
+                    <tr>
+                        <td>@GetNomeOperatore(slot.OperatoreId)</td>
+                        <td>
+                            <a href="/slotdisponibilita/edit/@slot.Id" class="btn btn-sm btn-primary">
+                                <i class="oi oi-pencil"></i> Modifica
+                            </a>
+                            <button class="btn btn-sm btn-danger" @onclick="() => DeleteSlot(slot.Id)">
+                                <i class="oi oi-trash"></i> Elimina
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    private List<NonDisponibile> slots;
+    private List<NonDisponibile> slotsFiltrati;
+    private List<Operatore> operatori;
+    private List<Servizio> servizi;
+    private int filtroOperatoreId = 0;
+    private int filtroServizioId = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        operatori = await OperatoreService.GetOperatoriAsync();
+        servizi = await ServizioService.GetServiziAsync();
+        await CaricaSlot();
+    }
+
+    private async Task CaricaSlot()
+    {
+        slots = await NonDisponibileService.GetAllNonDisponibileAsync();
+        ApplicaFiltri();
+    }
+
+    private void ApplicaFiltri()
+    {
+        slotsFiltrati = slots;
+    }
+
+    private void FiltroOperatoreChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int operatoreId))
+        {
+            filtroOperatoreId = operatoreId;
+            ApplicaFiltri();
+        }
+    }
+
+    private void FiltroServizioChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int servizioId))
+        {
+            filtroServizioId = servizioId;
+            ApplicaFiltri();
+        }
+    }
+
+    private string GetNomeOperatore(int operatoreId)
+    {
+        var operatore = operatori.FirstOrDefault(o => o.Id == operatoreId);
+        return operatore != null ? operatore.NomeCompleto : "N/A";
+    }
+
+    private string GetNomeServizio(int servizioId)
+    {
+        var servizio = servizi.FirstOrDefault(s => s.Id == servizioId);
+        return servizio != null ? servizio.Nome : "N/A";
+    }
+
+    private async Task DeleteSlot(int id)
+    {
+        if (await JSRuntime.InvokeAsync<bool>("confirm", "Sei sicuro di voler eliminare questo slot di disponibilità?"))
+        {
+            await SlotDisponibilitaService.DeleteSlotDisponibilitaAsync(id);
+            await CaricaSlot();
+        }
+    }
+}

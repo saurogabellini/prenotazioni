@@ -1,0 +1,235 @@
+@page "/prenotazioni/edit/{Id:int}"
+@using MedicoPrenotazioni.Models
+@using MedicoPrenotazioni.Services
+@inject IPrenotazioneService PrenotazioneService
+@inject IOperatoreService OperatoreService
+@inject IServizioService ServizioService
+@inject NavigationManager NavigationManager
+
+<h3>Modifica Prenotazione</h3>
+
+@if (prenotazione == null || operatori == null || servizi == null)
+{
+    <p><em>Caricamento in corso...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <EditForm Model="@prenotazione" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="servizio" class="form-label">Servizio</label>
+                                <InputSelect id="servizio" @bind-Value="prenotazione.ServizioId" class="form-control">
+                                    @foreach (var servizio in servizi)
+                                    {
+                                        <option value="@servizio.Id">@servizio.Nome</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => prenotazione.ServizioId)" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="operatore" class="form-label">Operatore</label>
+                                <InputSelect id="operatore" @bind-Value="prenotazione.OperatoreId" class="form-control">
+                                    @foreach (var operatore in operatori)
+                                    {
+                                        <option value="@operatore.Id">@operatore.NomeCompleto</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => prenotazione.OperatoreId)" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="data" class="form-label">Data</label>
+                                <InputDate id="data" @bind-Value="prenotazione.Data" class="form-control" />
+                                <ValidationMessage For="@(() => prenotazione.Data)" />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="oraInizio" class="form-label">Ora Inizio</label>
+                                <InputText id="oraInizio" @bind-Value="oraInizioString" class="form-control" placeholder="HH:MM" />
+                                <ValidationMessage For="@(() => prenotazione.OraInizio)" />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="oraFine" class="form-label">Ora Fine</label>
+                                <InputText id="oraFine" @bind-Value="oraFineString" class="form-control" placeholder="HH:MM" />
+                                <ValidationMessage For="@(() => prenotazione.OraFine)" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="nomeCliente" class="form-label">Nome Cliente</label>
+                                <InputText id="nomeCliente" @bind-Value="prenotazione.NomeCliente" class="form-control" />
+                                <ValidationMessage For="@(() => prenotazione.NomeCliente)" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cognomeCliente" class="form-label">Cognome Cliente</label>
+                                <InputText id="cognomeCliente" @bind-Value="prenotazione.CognomeCliente" class="form-control" />
+                                <ValidationMessage For="@(() => prenotazione.CognomeCliente)" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="telefonoCliente" class="form-label">Telefono Cliente</label>
+                                <InputText id="telefonoCliente" @bind-Value="prenotazione.TelefonoCliente" class="form-control" />
+                                <ValidationMessage For="@(() => prenotazione.TelefonoCliente)" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="emailCliente" class="form-label">Email Cliente</label>
+                                <InputText id="emailCliente" @bind-Value="prenotazione.EmailCliente" class="form-control" />
+                                <ValidationMessage For="@(() => prenotazione.EmailCliente)" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="stato" class="form-label">Stato Prenotazione</label>
+                            <InputSelect id="stato" @bind-Value="prenotazione.Stato" class="form-control">
+                                @foreach (StatoPrenotazione stato in Enum.GetValues(typeof(StatoPrenotazione)))
+                                {
+                                    <option value="@stato">@stato.ToString()</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => prenotazione.Stato)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="note" class="form-label">Note</label>
+                            <InputTextArea id="note" @bind-Value="prenotazione.Note" class="form-control" rows="3" />
+                            <ValidationMessage For="@(() => prenotazione.Note)" />
+                        </div>
+
+                        @if (errorMessage != null)
+                        {
+                            <div class="alert alert-danger">@errorMessage</div>
+                        }
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="/prenotazioni" class="btn btn-secondary">Annulla</a>
+                            <button type="submit" class="btn btn-primary">Aggiorna Prenotazione</button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Informazioni Prenotazione
+                </div>
+                <div class="card-body">
+                    <dl>
+                        <dt>ID Prenotazione:</dt>
+                        <dd>@prenotazione.Id</dd>
+
+                        <dt>Data Creazione:</dt>
+                        <dd>@prenotazione.DataCreazione.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                        @if (prenotazione.DataModifica.HasValue)
+                        {
+                            <dt>Ultima Modifica:</dt>
+                            <dd>@prenotazione.DataModifica.Value.ToString("dd/MM/yyyy HH:mm")</dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Prenotazione? prenotazione;
+    private List<Operatore>? operatori;
+    private List<Servizio>? servizi;
+    private string? oraInizioString;
+    private string? oraFineString;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        operatori = await OperatoreService.GetOperatoriAsync();
+        servizi = await ServizioService.GetServiziAsync();
+        prenotazione = await PrenotazioneService.GetPrenotazioneByIdAsync(Id);
+
+        if (prenotazione == null)
+        {
+            NavigationManager.NavigateTo("/prenotazioni");
+        }
+        else
+        {
+            oraInizioString = prenotazione.OraInizio.ToString(@"hh\:mm");
+            oraFineString = prenotazione.OraFine.ToString(@"hh\:mm");
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        errorMessage = null;
+
+        if (prenotazione == null)
+            return;
+
+        // Converti le stringhe di ora in TimeSpan
+        if (oraInizioString != null && TimeSpan.TryParse(oraInizioString, out TimeSpan oraInizio))
+        {
+            prenotazione.OraInizio = oraInizio;
+        }
+        else
+        {
+            errorMessage = "Formato ora inizio non valido. Utilizzare il formato HH:MM.";
+            return;
+        }
+
+        if (oraFineString != null && TimeSpan.TryParse(oraFineString, out TimeSpan oraFine))
+        {
+            prenotazione.OraFine = oraFine;
+        }
+        else
+        {
+            errorMessage = "Formato ora fine non valido. Utilizzare il formato HH:MM.";
+            return;
+        }
+
+        // Verifica che l'ora di inizio sia prima dell'ora di fine
+        if (prenotazione.OraInizio >= prenotazione.OraFine)
+        {
+            errorMessage = "L'ora di inizio deve essere precedente all'ora di fine.";
+            return;
+        }
+
+        // Se lo stato è cambiato a Annullata, non è necessario verificare la disponibilità
+        if (prenotazione.Stato != StatoPrenotazione.Annullata)
+        {
+            // Verifica disponibilità solo se data o ora sono cambiate
+            // In una implementazione reale, questa logica sarebbe più complessa
+            // e terrebbe conto della prenotazione originale
+            bool disponibile = true;
+            
+            if (!disponibile)
+            {
+                errorMessage = "Lo slot selezionato non è disponibile. Seleziona un altro orario.";
+                return;
+            }
+        }
+
+        var result = await PrenotazioneService.UpdatePrenotazioneAsync(prenotazione);
+        if (result != null)
+        {
+            NavigationManager.NavigateTo("/prenotazioni");
+        }
+        else
+        {
+            errorMessage = "Si è verificato un errore durante l'aggiornamento della prenotazione. Riprova.";
+        }
+    }
+}

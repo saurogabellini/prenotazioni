@@ -1,0 +1,76 @@
+@page "/operatori/create"
+@using MedicoPrenotazioni.Models
+@using MedicoPrenotazioni.Services
+@inject IOperatoreService OperatoreService
+@inject NavigationManager NavigationManager
+
+<h3>Nuovo Operatore</h3>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <EditForm Model="@operatore" OnValidSubmit="HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome</label>
+                        <InputText id="nome" @bind-Value="operatore.Nome" class="form-control" />
+                        <ValidationMessage For="@(() => operatore.Nome)" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="cognome" class="form-label">Cognome</label>
+                        <InputText id="cognome" @bind-Value="operatore.Cognome" class="form-control" />
+                        <ValidationMessage For="@(() => operatore.Cognome)" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="specializzazione" class="form-label">Specializzazione</label>
+                        <InputText id="specializzazione" @bind-Value="operatore.Specializzazione" class="form-control" />
+                        <ValidationMessage For="@(() => operatore.Specializzazione)" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <InputText id="email" @bind-Value="operatore.Email" class="form-control" />
+                        <ValidationMessage For="@(() => operatore.Email)" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Telefono</label>
+                        <InputText id="telefono" @bind-Value="operatore.Telefono" class="form-control" />
+                        <ValidationMessage For="@(() => operatore.Telefono)" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="note" class="form-label">Note</label>
+                        <InputTextArea id="note" @bind-Value="operatore.Note" class="form-control" rows="3" />
+                        <ValidationMessage For="@(() => operatore.Note)" />
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <InputCheckbox id="attivo" @bind-Value="operatore.Attivo" class="form-check-input" />
+                        <label class="form-check-label" for="attivo">Attivo</label>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary">Salva</button>
+                        <a href="/operatori" class="btn btn-secondary">Annulla</a>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Operatore operatore = new Operatore { Attivo = true };
+
+    private async Task HandleValidSubmit()
+    {
+        await OperatoreService.CreateOperatoreAsync(operatore);
+        NavigationManager.NavigateTo("/operatori");
+    }
+}

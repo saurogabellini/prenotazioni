@@ -1,0 +1,111 @@
+is_global = true
+build_property.TargetFramework = net7.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = MedicoPrenotazioni
+build_property.RootNamespace = MedicoPrenotazioni
+build_property.ProjectDir = C:\Medico\MedicoApp\MedicoPrenotazioni\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 7.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Medico\MedicoApp\MedicoPrenotazioni
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/Counter.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/FetchData.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRmV0Y2hEYXRhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/NonDisponibilita/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTm9uRGlzcG9uaWJpbGl0YVxJbmRleC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/Operatori/Create.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcT3BlcmF0b3JpXENyZWF0ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/Operatori/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcT3BlcmF0b3JpXEVkaXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/Operatori/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcT3BlcmF0b3JpXEluZGV4LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/Prenotazioni/Create.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJlbm90YXppb25pXENyZWF0ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/Prenotazioni/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJlbm90YXppb25pXEVkaXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/Prenotazioni/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJlbm90YXppb25pXEluZGV4LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/Servizi/Create.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2Vydml6aVxDcmVhdGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/Servizi/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2Vydml6aVxFZGl0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/Servizi/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2Vydml6aVxJbmRleC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/SlotDisponibilita/Create.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2xvdERpc3BvbmliaWxpdGFcQ3JlYXRlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/SlotDisponibilita/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2xvdERpc3BvbmliaWxpdGFcRWRpdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/SlotDisponibilita/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2xvdERpc3BvbmliaWxpdGFcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Shared/SurveyPrompt.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFN1cnZleVByb21wdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-vrikchbgbx
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-t89k22lloi
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Medico/MedicoApp/MedicoPrenotazioni/Pages/_Host.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0hvc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 

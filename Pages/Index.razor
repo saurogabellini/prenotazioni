@@ -1,0 +1,54 @@
+@page "/"
+
+<PageTitle>Home - Sistema di Prenotazioni Mediche</PageTitle>
+
+<div class="container">
+    <div class="jumbotron bg-light p-5 rounded">
+        <h1 class="display-4">Sistema di Prenotazioni Mediche</h1>
+        <p class="lead">
+            Benvenuto nel sistema di gestione delle prenotazioni per ambulatori medici.
+            Questa applicazione permette di gestire operatori, servizi, disponibilità e prenotazioni.
+        </p>
+        <hr class="my-4">
+        <p>Utilizza il menu laterale per accedere alle diverse funzionalità del sistema.</p>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><i class="oi oi-people" aria-hidden="true"></i> Operatori</h5>
+                    <p class="card-text">Gestisci l'anagrafica degli operatori sanitari</p>
+                    <a href="/operatori" class="btn btn-primary">Vai agli Operatori</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><i class="oi oi-list" aria-hidden="true"></i> Servizi</h5>
+                    <p class="card-text">Gestisci i servizi offerti dall'ambulatorio</p>
+                    <a href="/servizi" class="btn btn-primary">Vai ai Servizi</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><i class="oi oi-calendar" aria-hidden="true"></i> Disponibilità</h5>
+                    <p class="card-text">Configura gli slot di disponibilità settimanali</p>
+                    <a href="/slotdisponibilita" class="btn btn-primary">Vai alle Disponibilità</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><i class="oi oi-clock" aria-hidden="true"></i> Prenotazioni</h5>
+                    <p class="card-text">Gestisci le prenotazioni dei clienti</p>
+                    <a href="/prenotazioni" class="btn btn-primary">Vai alle Prenotazioni</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

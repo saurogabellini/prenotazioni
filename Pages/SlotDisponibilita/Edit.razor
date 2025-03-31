@@ -1,0 +1,152 @@
+@page "/slotdisponibilita/edit/{Id:int}"
+@using MedicoPrenotazioni.Models
+@using MedicoPrenotazioni.Services
+@inject ISlotDisponibilitaService SlotDisponibilitaService
+@inject IOperatoreService OperatoreService
+@inject IServizioService ServizioService
+@inject NavigationManager NavigationManager
+
+<h3>Modifica Slot di Disponibilità</h3>
+
+@if (slot == null || operatori == null || servizi == null)
+{
+    <p><em>Caricamento in corso...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <EditForm Model="@slot" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="mb-3">
+                            <label for="operatore" class="form-label">Operatore</label>
+                            <InputSelect id="operatore" @bind-Value="slot.OperatoreId" class="form-control">
+                                <option value="">-- Seleziona un operatore --</option>
+                                @foreach (var operatore in operatori)
+                                {
+                                    <option value="@operatore.Id">@operatore.NomeCompleto</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => slot.OperatoreId)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="servizio" class="form-label">Servizio</label>
+                            <InputSelect id="servizio" @bind-Value="slot.ServizioId" class="form-control">
+                                <option value="">-- Seleziona un servizio --</option>
+                                @foreach (var servizio in servizi)
+                                {
+                                    <option value="@servizio.Id">@servizio.Nome</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => slot.ServizioId)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="giorno" class="form-label">Giorno della Settimana</label>
+                            <InputSelect id="giorno" @bind-Value="slot.Giorno" class="form-control">
+                                @foreach (GiornoSettimana giorno in Enum.GetValues(typeof(GiornoSettimana)))
+                                {
+                                    <option value="@giorno">@giorno.ToString()</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => slot.Giorno)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="oraInizio" class="form-label">Ora Inizio</label>
+                            <InputText id="oraInizio" @bind-Value="oraInizioString" class="form-control" placeholder="HH:MM" />
+                            <ValidationMessage For="@(() => slot.OraInizio)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="oraFine" class="form-label">Ora Fine</label>
+                            <InputText id="oraFine" @bind-Value="oraFineString" class="form-control" placeholder="HH:MM" />
+                            <ValidationMessage For="@(() => slot.OraFine)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="durataMinuti" class="form-label">Durata Appuntamento (minuti)</label>
+                            <InputNumber id="durataMinuti" @bind-Value="slot.DurataMinuti" class="form-control" />
+                            <ValidationMessage For="@(() => slot.DurataMinuti)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="note" class="form-label">Note</label>
+                            <InputTextArea id="note" @bind-Value="slot.Note" class="form-control" rows="3" />
+                            <ValidationMessage For="@(() => slot.Note)" />
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <InputCheckbox id="attivo" @bind-Value="slot.Attivo" class="form-check-input" />
+                            <label class="form-check-label" for="attivo">Attivo</label>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">Aggiorna</button>
+                            <a href="/slotdisponibilita" class="btn btn-secondary">Annulla</a>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private SlotDisponibilita? slot;
+    private List<Operatore>? operatori;
+    private List<Servizio>? servizi;
+    private string? oraInizioString;
+    private string? oraFineString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        operatori = await OperatoreService.GetOperatoriAsync();
+        servizi = await ServizioService.GetServiziAsync();
+        slot = await SlotDisponibilitaService.GetSlotDisponibilitaByIdAsync(Id);
+
+        if (slot == null)
+        {
+            NavigationManager.NavigateTo("/slotdisponibilita");
+        }
+        else
+        {
+            oraInizioString = slot.OraInizio.ToString(@"hh\:mm");
+            oraFineString = slot.OraFine.ToString(@"hh\:mm");
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (slot == null) return;
+
+        // Converti le stringhe di ora in TimeSpan
+        if (oraInizioString != null && TimeSpan.TryParse(oraInizioString, out TimeSpan oraInizio))
+        {
+            slot.OraInizio = oraInizio;
+        }
+
+        if (oraFineString != null && TimeSpan.TryParse(oraFineString, out TimeSpan oraFine))
+        {
+            slot.OraFine = oraFine;
+        }
+
+        // Verifica che l'ora di inizio sia prima dell'ora di fine
+        if (slot.OraInizio >= slot.OraFine)
+        {
+            // Gestire l'errore
+            return;
+        }
+
+        await SlotDisponibilitaService.UpdateSlotDisponibilitaAsync(slot);
+        NavigationManager.NavigateTo("/slotdisponibilita");
+    }
+}

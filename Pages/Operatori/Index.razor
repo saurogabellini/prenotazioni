@@ -1,0 +1,93 @@
+@page "/operatori"
+@using MedicoPrenotazioni.Models
+@using MedicoPrenotazioni.Services
+@inject IOperatoreService OperatoreService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<h3>Gestione Operatori</h3>
+
+<div class="row mb-3">
+    <div class="col">
+        <a href="/operatori/create" class="btn btn-primary">
+            <i class="oi oi-plus"></i> Nuovo Operatore
+        </a>
+    </div>
+</div>
+
+@if (operatori == null)
+{
+    <p><em>Caricamento in corso...</em></p>
+}
+else if (!operatori.Any())
+{
+    <div class="alert alert-info">
+        Non ci sono operatori registrati nel sistema.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Specializzazione</th>
+                    <th>Email</th>
+                    <th>Telefono</th>
+                    <th>Stato</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var operatore in operatori)
+                {
+                    <tr>
+                        <td>@operatore.Nome</td>
+                        <td>@operatore.Cognome</td>
+                        <td>@operatore.Specializzazione</td>
+                        <td>@operatore.Email</td>
+                        <td>@operatore.Telefono</td>
+                        <td>
+                            @if (operatore.Attivo)
+                            {
+                                <span class="badge bg-success">Attivo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Inattivo</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="/operatori/edit/@operatore.Id" class="btn btn-sm btn-primary">
+                                <i class="oi oi-pencil"></i> Modifica
+                            </a>
+                            <button class="btn btn-sm btn-danger" @onclick="() => DeleteOperatore(operatore.Id)">
+                                <i class="oi oi-trash"></i> Elimina
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    private List<Operatore>? operatori;
+
+    protected override async Task OnInitializedAsync()
+    {
+        operatori = await OperatoreService.GetOperatoriAsync();
+    }
+
+    private async Task DeleteOperatore(int id)
+    {
+        if (await JSRuntime.InvokeAsync<bool>("confirm", $"Sei sicuro di voler eliminare questo operatore?"))
+        {
+            await OperatoreService.DeleteOperatoreAsync(id);
+            operatori = await OperatoreService.GetOperatoriAsync();
+        }
+    }
+}

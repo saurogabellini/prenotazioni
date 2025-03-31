@@ -1,0 +1,387 @@
+@page "/prenotazioni/create"
+@using MedicoPrenotazioni.Models
+@using MedicoPrenotazioni.Services
+@inject IPrenotazioneService PrenotazioneService
+@inject IOperatoreService OperatoreService
+@inject IServizioService ServizioService
+@inject NavigationManager NavigationManager
+
+<h3>Nuova Prenotazione</h3>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <div class="wizard">
+                    @if (step == 1)
+                    {
+                        <h4>Passo 1: Seleziona il Servizio</h4>
+                        <div class="mb-3">
+                            <label for="servizio" class="form-label">Servizio</label>
+                            <select id="servizio" class="form-control" @onchange="ServizioSelezionato">
+                                <option value="">-- Seleziona un servizio --</option>
+                                @if (servizi != null)
+                                {
+                                    @foreach (var servizio in servizi.Where(s => s.Attivo))
+                                    {
+                                        <option value="@servizio.Id">@servizio.Nome (@servizio.DurataDefaultMinuti min) - €@servizio.Prezzo</option>
+                                    }
+                                }
+                            </select>
+                            @if (errorMessage != null)
+                            {
+                                <div class="text-danger mt-2">@errorMessage</div>
+                            }
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="/prenotazioni" class="btn btn-secondary">Annulla</a>
+                            <button class="btn btn-primary" @onclick="NextStep" disabled="@(servizioSelezionato == null)">Avanti</button>
+                        </div>
+                    }
+                    else if (step == 2)
+                    {
+                        <h4>Passo 2: Seleziona l'Operatore</h4>
+                        <div class="mb-3">
+                            <label for="operatore" class="form-label">Operatore</label>
+                            <select id="operatore" class="form-control" @onchange="OperatoreSelezionato">
+                                <option value="">-- Seleziona un operatore --</option>
+                                @if (operatoriDisponibili != null)
+                                {
+                                    @foreach (var operatore in operatoriDisponibili)
+                                    {
+                                        <option value="@operatore.Id">@operatore.NomeCompleto - @operatore.Specializzazione</option>
+                                    }
+                                }
+                            </select>
+                            @if (errorMessage != null)
+                            {
+                                <div class="text-danger mt-2">@errorMessage</div>
+                            }
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button class="btn btn-secondary" @onclick="PreviousStep">Indietro</button>
+                            <button class="btn btn-primary" @onclick="NextStep" disabled="@(operatoreSelezionato == null)">Avanti</button>
+                        </div>
+                    }
+                    else if (step == 3)
+                    {
+                        <h4>Passo 3: Seleziona Data e Ora</h4>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="data" class="form-label">Data</label>
+                                <select id="data" class="form-control" @onchange="DataSelezionata">
+                                    <option value="">-- Seleziona una data --</option>
+                                    @if (dateDisponibili != null)
+                                    {
+                                        @foreach (var data in dateDisponibili)
+                                        {
+                                            <option value="@data.ToString("yyyy-MM-dd")">@data.ToString("dddd, dd MMMM yyyy")</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="ora" class="form-label">Ora</label>
+                                <select id="ora" class="form-control" @onchange="OraSelezionata" disabled="@(dataSelezionata == null)">
+                                    <option value="">-- Seleziona un orario --</option>
+                                    @if (orariDisponibili != null)
+                                    {
+                                        @foreach (var ora in orariDisponibili)
+                                        {
+                                            <option value="@ora.ToString()">@ora.ToString(@"hh\:mm")</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        @if (errorMessage != null)
+                        {
+                            <div class="text-danger mt-2">@errorMessage</div>
+                        }
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button class="btn btn-secondary" @onclick="PreviousStep">Indietro</button>
+                            <button class="btn btn-primary" @onclick="NextStep" disabled="@(dataSelezionata == null || oraSelezionata == null)">Avanti</button>
+                        </div>
+                    }
+                    else if (step == 4)
+                    {
+                        <h4>Passo 4: Inserisci i Dati del Cliente</h4>
+                        <EditForm Model="@prenotazione" OnValidSubmit="HandleValidSubmit">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="nomeCliente" class="form-label">Nome</label>
+                                    <InputText id="nomeCliente" @bind-Value="prenotazione.NomeCliente" class="form-control" />
+                                    <ValidationMessage For="@(() => prenotazione.NomeCliente)" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="cognomeCliente" class="form-label">Cognome</label>
+                                    <InputText id="cognomeCliente" @bind-Value="prenotazione.CognomeCliente" class="form-control" />
+                                    <ValidationMessage For="@(() => prenotazione.CognomeCliente)" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="telefonoCliente" class="form-label">Telefono</label>
+                                    <InputText id="telefonoCliente" @bind-Value="prenotazione.TelefonoCliente" class="form-control" />
+                                    <ValidationMessage For="@(() => prenotazione.TelefonoCliente)" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="emailCliente" class="form-label">Email</label>
+                                    <InputText id="emailCliente" @bind-Value="prenotazione.EmailCliente" class="form-control" />
+                                    <ValidationMessage For="@(() => prenotazione.EmailCliente)" />
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="note" class="form-label">Note</label>
+                                <InputTextArea id="note" @bind-Value="prenotazione.Note" class="form-control" rows="3" />
+                                <ValidationMessage For="@(() => prenotazione.Note)" />
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="button" class="btn btn-secondary" @onclick="PreviousStep">Indietro</button>
+                                <button type="submit" class="btn btn-success">Conferma Prenotazione</button>
+                            </div>
+                        </EditForm>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                Riepilogo Prenotazione
+            </div>
+            <div class="card-body">
+                <dl>
+                    <dt>Servizio:</dt>
+                    <dd>@(GetNomeServizio(prenotazione.ServizioId))</dd>
+
+                    <dt>Operatore:</dt>
+                    <dd>@(GetNomeOperatore(prenotazione.OperatoreId))</dd>
+
+                    <dt>Data:</dt>
+                    <dd>@(prenotazione.Data != default ? prenotazione.Data.ToString("dddd, dd MMMM yyyy") : "-")</dd>
+
+                    <dt>Ora:</dt>
+                    <dd>@(prenotazione.OraInizio != default ? prenotazione.OraInizio.ToString(@"hh\:mm") : "-")</dd>
+
+                    <dt>Durata:</dt>
+                    <dd>@(GetDurataServizio(prenotazione.ServizioId)) minuti</dd>
+
+                    <dt>Prezzo:</dt>
+                    <dd>@(GetPrezzoServizio(prenotazione.ServizioId).ToString("C"))</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private int step = 1;
+    private string? errorMessage;
+    private List<Operatore>? operatori;
+    private List<Operatore>? operatoriDisponibili;
+    private List<Servizio>? servizi;
+    private Servizio? servizioSelezionato;
+    private Operatore? operatoreSelezionato;
+    private List<DateTime>? dateDisponibili;
+    private DateTime? dataSelezionata;
+    private List<TimeSpan>? orariDisponibili;
+    private TimeSpan? oraSelezionata;
+    private Prenotazione prenotazione = new Prenotazione { Stato = StatoPrenotazione.Prenotata };
+
+    protected override async Task OnInitializedAsync()
+    {
+        operatori = await OperatoreService.GetOperatoriAsync();
+        servizi = await ServizioService.GetServiziAsync();
+    }
+
+    private async void ServizioSelezionato(ChangeEventArgs e)
+    {
+        errorMessage = null;
+        if (e.Value != null && int.TryParse(e.Value.ToString(), out int servizioId))
+        {
+            servizioSelezionato = servizi?.FirstOrDefault(s => s.Id == servizioId);
+            if (servizioSelezionato != null)
+            {
+                prenotazione.ServizioId = servizioId;
+                // In una implementazione reale, qui si dovrebbero filtrare gli operatori
+                // che offrono il servizio selezionato
+                operatoriDisponibili = operatori?.Where(o => o.Attivo).ToList();
+            }
+        }
+        else
+        {
+            servizioSelezionato = null;
+            prenotazione.ServizioId = 0;
+        }
+        StateHasChanged();
+    }
+
+    private async void OperatoreSelezionato(ChangeEventArgs e)
+    {
+        errorMessage = null;
+        if (e.Value != null && int.TryParse(e.Value.ToString(), out int operatoreId))
+        {
+            operatoreSelezionato = operatori?.FirstOrDefault(o => o.Id == operatoreId);
+            if (operatoreSelezionato != null)
+            {
+                prenotazione.OperatoreId = operatoreId;
+                // Carica le date disponibili per questo operatore e servizio
+                dateDisponibili = await PrenotazioneService.GetDateDisponibiliAsync(prenotazione.ServizioId, prenotazione.OperatoreId);
+            }
+        }
+        else
+        {
+            operatoreSelezionato = null;
+            prenotazione.OperatoreId = 0;
+        }
+        StateHasChanged();
+    }
+
+    private async void DataSelezionata(ChangeEventArgs e)
+    {
+        errorMessage = null;
+        if (e.Value != null && DateTime.TryParse(e.Value.ToString(), out DateTime data))
+        {
+            dataSelezionata = data;
+            prenotazione.Data = data;
+            // Carica gli orari disponibili per questa data
+            orariDisponibili = await PrenotazioneService.GetOrariDisponibiliAsync(
+                prenotazione.ServizioId,
+                prenotazione.OperatoreId,
+                data);
+        }
+        else
+        {
+            dataSelezionata = null;
+            prenotazione.Data = default;
+            orariDisponibili = null;
+        }
+        oraSelezionata = null;
+        prenotazione.OraInizio = default;
+        prenotazione.OraFine = default;
+        StateHasChanged();
+    }
+
+    private void OraSelezionata(ChangeEventArgs e)
+    {
+        errorMessage = null;
+        if (e.Value != null && TimeSpan.TryParse(e.Value.ToString(), out TimeSpan ora))
+        {
+            oraSelezionata = ora;
+            prenotazione.OraInizio = ora;
+            
+            // Calcola l'ora di fine in base alla durata del servizio
+            if (servizioSelezionato != null)
+            {
+                prenotazione.OraFine = ora.Add(TimeSpan.FromMinutes(servizioSelezionato.DurataDefaultMinuti));
+            }
+        }
+        else
+        {
+            oraSelezionata = null;
+            prenotazione.OraInizio = default;
+            prenotazione.OraFine = default;
+        }
+        StateHasChanged();
+    }
+
+    private void NextStep()
+    {
+        errorMessage = null;
+        
+        if (step == 1 && servizioSelezionato == null)
+        {
+            errorMessage = "Seleziona un servizio per continuare.";
+            return;
+        }
+        
+        if (step == 2 && operatoreSelezionato == null)
+        {
+            errorMessage = "Seleziona un operatore per continuare.";
+            return;
+        }
+        
+        if (step == 3 && (dataSelezionata == null || oraSelezionata == null))
+        {
+            errorMessage = "Seleziona data e ora per continuare.";
+            return;
+        }
+        
+        step++;
+    }
+
+    private void PreviousStep()
+    {
+        errorMessage = null;
+        if (step > 1)
+        {
+            step--;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        // Verifica disponibilità prima di salvare
+        bool disponibile = await PrenotazioneService.VerificaDisponibilitaAsync(
+            prenotazione.ServizioId,
+            prenotazione.OperatoreId,
+            prenotazione.Data,
+            prenotazione.OraInizio);
+
+        if (!disponibile)
+        {
+            errorMessage = "Lo slot selezionato non è più disponibile. Seleziona un altro orario.";
+            step = 3;
+            return;
+        }
+
+        var result = await PrenotazioneService.CreatePrenotazioneAsync(prenotazione);
+        if (result != null)
+        {
+            NavigationManager.NavigateTo("/prenotazioni");
+        }
+        else
+        {
+            errorMessage = "Si è verificato un errore durante la prenotazione. Riprova.";
+        }
+    }
+
+    private string GetNomeOperatore(int operatoreId)
+    {
+        if (operatoreId == 0) return "-";
+        var operatore = operatori?.FirstOrDefault(o => o.Id == operatoreId);
+        return operatore != null ? operatore.NomeCompleto : "-";
+    }
+
+    private string GetNomeServizio(int servizioId)
+    {
+        if (servizioId == 0) return "-";
+        var servizio = servizi?.FirstOrDefault(s => s.Id == servizioId);
+        return servizio != null ? servizio.Nome : "-";
+    }
+
+    private int GetDurataServizio(int servizioId)
+    {
+        if (servizioId == 0) return 0;
+        var servizio = servizi?.FirstOrDefault(s => s.Id == servizioId);
+        return servizio != null ? servizio.DurataDefaultMinuti : 0;
+    }
+
+    private decimal GetPrezzoServizio(int servizioId)
+    {
+        if (servizioId == 0) return 0;
+        var servizio = servizi?.FirstOrDefault(s => s.Id == servizioId);
+        return servizio != null ? servizio.Prezzo : 0;
+    }
+}

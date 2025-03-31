@@ -1,0 +1,93 @@
+@page "/servizi/edit/{Id:int}"
+@using MedicoPrenotazioni.Models
+@using MedicoPrenotazioni.Services
+@inject IServizioService ServizioService
+@inject NavigationManager NavigationManager
+
+<h3>Modifica Servizio</h3>
+
+@if (servizio == null)
+{
+    <p><em>Caricamento in corso...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <EditForm Model="@servizio" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="mb-3">
+                            <label for="nome" class="form-label">Nome</label>
+                            <InputText id="nome" @bind-Value="servizio.Nome" class="form-control" />
+                            <ValidationMessage For="@(() => servizio.Nome)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descrizione" class="form-label">Descrizione</label>
+                            <InputTextArea id="descrizione" @bind-Value="servizio.Descrizione" class="form-control" rows="3" />
+                            <ValidationMessage For="@(() => servizio.Descrizione)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="prezzo" class="form-label">Prezzo (€)</label>
+                            <InputNumber id="prezzo" @bind-Value="servizio.Prezzo" class="form-control" />
+                            <ValidationMessage For="@(() => servizio.Prezzo)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="durataDefaultMinuti" class="form-label">Durata Default (minuti)</label>
+                            <InputNumber id="durataDefaultMinuti" @bind-Value="servizio.DurataDefaultMinuti" class="form-control" />
+                            <ValidationMessage For="@(() => servizio.DurataDefaultMinuti)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="note" class="form-label">Note</label>
+                            <InputTextArea id="note" @bind-Value="servizio.Note" class="form-control" rows="3" />
+                            <ValidationMessage For="@(() => servizio.Note)" />
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <InputCheckbox id="attivo" @bind-Value="servizio.Attivo" class="form-check-input" />
+                            <label class="form-check-label" for="attivo">Attivo</label>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">Aggiorna</button>
+                            <a href="/servizi" class="btn btn-secondary">Annulla</a>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Servizio? servizio;
+
+    protected override async Task OnInitializedAsync()
+    {
+        servizio = await ServizioService.GetServizioByIdAsync(Id);
+        
+        if (servizio == null)
+        {
+            NavigationManager.NavigateTo("/servizi");
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (servizio != null)
+        {
+            await ServizioService.UpdateServizioAsync(servizio);
+            NavigationManager.NavigateTo("/servizi");
+        }
+    }
+}
