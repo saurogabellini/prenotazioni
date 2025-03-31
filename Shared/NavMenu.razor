@@ -1,51 +1,41 @@
-<div class="sidebar">
-    <div class="top-row ps-3 navbar navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="">MedicoPrenotazioni</a>
-            <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+<div class="nav-container">
+    <div class="logo">
+        <a href="">
+            <img src="/logo.png" alt="Logo" />
+        </a>
+    </div>
+    <nav>
+        <div class="nav-item">
+            <a href="" class="nav-link home-icon" title="Home">
+                <span class="icon-home"></span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="counter" class="nav-link calendar-icon" title="Calendario">
+                <span class="icon-calendar"></span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="fetchdata" class="nav-link search-icon" title="Ricerca">
+                <span class="icon-search"></span>
+            </a>
+        </div>
+    </nav>
+    <div class="nav-bottom">
+        <div class="nav-item">
+            <a href="" class="nav-link back-icon" title="Indietro">
+                <span class="icon-back"></span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="" class="nav-link share-icon" title="Condividi">
+                <span class="icon-share"></span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="" class="nav-link help-icon" title="Aiuto">
+                <span class="icon-help"></span>
+            </a>
         </div>
     </div>
-
-    <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-        <nav class="flex-column">
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                    <span class="oi oi-home" aria-hidden="true"></span> Home
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="operatori">
-                    <span class="oi oi-people" aria-hidden="true"></span> Operatori
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="servizi">
-                    <span class="oi oi-list" aria-hidden="true"></span> Servizi
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="slotdisponibilita">
-                    <span class="oi oi-calendar" aria-hidden="true"></span> Slot Disponibilità
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="prenotazioni">
-                    <span class="oi oi-clock" aria-hidden="true"></span> Prenotazioni
-                </NavLink>
-            </div>
-        </nav>
-    </div>
 </div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}

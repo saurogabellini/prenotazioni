@@ -133,3 +133,4 @@ C:\Medico\MedicoApp\MedicoPrenotazioni\obj\Debug\net7.0\refint\MedicoPrenotazion
 C:\Medico\MedicoApp\MedicoPrenotazioni\obj\Debug\net7.0\MedicoPrenotazioni.pdb
 C:\Medico\MedicoApp\MedicoPrenotazioni\obj\Debug\net7.0\MedicoPrenotazioni.genruntimeconfig.cache
 C:\Medico\MedicoApp\MedicoPrenotazioni\obj\Debug\net7.0\ref\MedicoPrenotazioni.dll
+C:\Medico\MedicoApp\MedicoPrenotazioni\obj\Debug\net7.0\MedicoPrenotazioni.sourcelink.json

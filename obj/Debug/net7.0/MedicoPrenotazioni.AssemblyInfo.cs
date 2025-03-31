@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MedicoPrenotazioni")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eb6565cc815a2bb9be3a136e807bfd6d426b680c")]
 [assembly: System.Reflection.AssemblyProductAttribute("MedicoPrenotazioni")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MedicoPrenotazioni")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

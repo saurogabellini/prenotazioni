@@ -1,68 +1,82 @@
-.navbar-toggler[b-t89k22lloi] {
-    background-color: rgba(255, 255, 255, 0.1);
+.nav-container[b-t89k22lloi] {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #00b3ad;
 }
 
-.top-row[b-t89k22lloi] {
-    height: 3.5rem;
-    background-color: rgba(0,0,0,0.4);
+.logo[b-t89k22lloi] {
+    padding: 10px 0;
+    text-align: center;
 }
 
-.navbar-brand[b-t89k22lloi] {
-    font-size: 1.1rem;
-}
+    .logo img[b-t89k22lloi] {
+        width: 30px;
+        height: auto;
+    }
 
-.oi[b-t89k22lloi] {
-    width: 2rem;
-    font-size: 1.1rem;
-    vertical-align: text-top;
-    top: -2px;
+nav[b-t89k22lloi] {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
 }
 
 .nav-item[b-t89k22lloi] {
-    font-size: 0.9rem;
-    padding-bottom: 0.5rem;
+    text-align: center;
+    margin-bottom: 15px;
 }
 
-    .nav-item:first-of-type[b-t89k22lloi] {
-        padding-top: 1rem;
-    }
-
-    .nav-item:last-of-type[b-t89k22lloi] {
-        padding-bottom: 1rem;
-    }
-
-    .nav-item[b-t89k22lloi]  a {
-        color: #d7d7d7;
-        border-radius: 4px;
-        height: 3rem;
-        display: flex;
-        align-items: center;
-        line-height: 3rem;
-    }
-
-.nav-item[b-t89k22lloi]  a.active {
-    background-color: rgba(255,255,255,0.25);
+.nav-link[b-t89k22lloi] {
     color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+    text-decoration: none;
 }
 
-.nav-item[b-t89k22lloi]  a:hover {
-    background-color: rgba(255,255,255,0.1);
-    color: white;
+/* Icons */
+[class^="icon-"][b-t89k22lloi] {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.icon-home[b-t89k22lloi] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>');
+}
+
+.icon-calendar[b-t89k22lloi] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>');
+}
+
+.icon-search[b-t89k22lloi] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>');
+}
+
+.nav-bottom[b-t89k22lloi] {
+    margin-top: auto;
+    padding-bottom: 20px;
+}
+
+.icon-back[b-t89k22lloi] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>');
+}
+
+.icon-share[b-t89k22lloi] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>');
+}
+
+.icon-help[b-t89k22lloi] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>');
 }
 
 @media (min-width: 641px) {
-    .navbar-toggler[b-t89k22lloi] {
-        display: none;
-    }
-
-    .collapse[b-t89k22lloi] {
-        /* Never collapse the sidebar for wide screens */
-        display: block;
-    }
-    
-    .nav-scrollable[b-t89k22lloi] {
-        /* Allow sidebar to scroll for tall menus */
-        height: calc(100vh - 3.5rem);
-        overflow-y: auto;
+    .nav-container[b-t89k22lloi] {
+        width: 50px;
     }
 }
